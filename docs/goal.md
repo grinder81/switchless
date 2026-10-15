@@ -48,8 +48,8 @@ Any of these may turn out false. Results are published either way.
 ## Ground rules (apply to every phase)
 
 - **The test split is touched once.** Rules, prompts, option descriptions and thresholds are developed
-  on the train split only. All four routers run on test in Phase 6, once, with everything frozen.
-- **Same information for every router.** LLM and JEV see the identical service names and descriptions
+  on the train split only. All dispatchers run on test in Phase 7, once, with everything frozen.
+- **Same information for every router.** LLM and JEV see the identical service and action descriptions
   from `src/catalog/`.
 - **An invalid or missing answer counts as wrong**, except an explicit abstain, which is reported
   separately.
@@ -57,59 +57,70 @@ Any of these may turn out false. Results are published either way.
 
 ## Phases and acceptance criteria
 
-### Phase 0: Foundation ✅
-- Repo, docs, router contract, harness skeleton, dataset download, CI green.
+Order: the product and harness need no API keys; JEV is tested early as a go/no-go gate.
 
-### Phase 1: Product (Kestrel Bank)
+### Phase 0: Foundation ✅
+- [x] Repo, docs, dispatcher contract, dataset download, CI green.
+
+### Phase 1: Product (Kestrel Bank) ✅
 - [x] All 77 intents assigned to exactly one action and service (enforced by a test).
 - [x] Every service owns at least 2 actions; every service and action has a one-line description.
-- [x] `docs/product.md` explains the grouping and lists the deliberately hard boundaries.
-- [ ] Fake bank data store seeded with demo customers and their stories.
-- [ ] All 77 handlers implemented and tested against the seed data.
-- [x] Train-split class balance per service reported (`docs/action-catalog.md`).
+- [x] `docs/product.md` explains the product and the deliberately hard boundaries.
+- [x] Fake bank seeded with four demo customers and their stories.
+- [x] All 77 handlers implemented; every handler answers every demo customer (tested).
+- [x] `POST /help` gateway with an injected dispatcher; abstain escalates to a human.
+- [x] End to end with an oracle dispatcher on 500 real Banking77 messages.
 
-### Phase 2: Rules router
-- [ ] Written using the train split only; development time is time-boxed and recorded.
-- [ ] Returns `service=None` (abstain) when no rule matches, instead of guessing.
-- [ ] `scripts/count-loc.ts` reports logical lines of code (no blanks, comments or docstrings) per router.
-- [ ] Train-split service accuracy and abstain rate reported.
+### Phase 2: Measurement harness
+- [ ] Fixed, seeded stratified train samples (300 and 1,000 messages), stored as message indices.
+- [ ] Runner records action, confidence, latency and cost per decision; resumable after interruption.
+- [ ] Metrics: action and service accuracy, abstain rate, p50/p95 latency, cost per 1,000, calibration,
+      per-service confusion, precision on safety-critical actions.
+- [ ] `scripts/count-loc.ts` counts logical lines of code (no blanks or comments) per dispatcher.
+- [ ] Report generator produces `results/summary.md` from runs; verified with oracle and random dispatchers.
 
-### Phase 3: LLM router
-- [ ] Model and version pinned in config; temperature 0; structured output (tool call / JSON schema).
-- [ ] Prompt built from the service map only; no train examples in the prompt (zero-shot, like JEV).
-- [ ] Token usage and cost recorded per decision from the API response.
-- [ ] Retries and rate limiting handled; failures logged, never silently dropped.
-- [ ] Validated on a fixed 300-message stratified sample of train.
+### Phase 3: JEV dispatcher (go/no-go gate)
+- [ ] Uses the catalogue's service and action descriptions only.
+- [ ] Returns the chosen action and its probability as `confidence`; cost and latency recorded.
+- [ ] Run on the 300-message train sample.
+- [ ] **Gate:** results reviewed together before continuing.
 
-### Phase 4: JEV router
-- [ ] Uses the same service names and descriptions as the LLM router.
-- [ ] Returns the chosen service plus its probability as `confidence`.
-- [ ] Cost and latency recorded per decision.
-- [ ] Validated on the same 300-message train sample as Phase 3.
+### Phase 4: LLM dispatcher
+- [ ] Model and version pinned; temperature 0; structured output.
+- [ ] Prompt built from the catalogue only; no train examples (zero-shot, like JEV).
+- [ ] Token usage and cost recorded per decision; retries and rate limits handled, failures logged.
+- [ ] Run on the same 300-message train sample.
 
-### Phase 5: Hybrid
+### Phase 5: Rules dispatcher (effort curve)
+- [ ] Written from the train split only, in stages, with an effort log (time and lines per stage).
+- [ ] Accuracy measured after each stage on the 1,000-message train sample: the accuracy-vs-LOC curve.
+- [ ] Abstains when no rule matches.
+- [ ] Disclosed as written by an AI coding assistant; reviewed by the project author.
+
+### Phase 6: Hybrid
 - [ ] Order: rules → JEV (accept if confidence ≥ τ) → LLM.
-- [ ] τ chosen on a 1,000-message stratified train sample; an accuracy-vs-fallback-rate curve is
-      produced; τ is frozen and recorded in `docs/decisions.md` before Phase 6.
+- [ ] τ chosen on the 1,000-message train sample from an accuracy-vs-fallback curve; frozen in
+      `docs/decisions.md` before Phase 7.
 - [ ] Each decision records which stage answered.
 
-### Phase 6: Benchmark and report
-- [ ] All four routers run once on the full 3,080-message test split.
-- [ ] Consistency check: a 200-message subset re-run 3 times for LLM and JEV; the rate of changed
-      answers is reported.
-- [ ] `results/summary.md` contains one table per metric: service accuracy, intent accuracy (where
-      applicable), p50/p95 latency, cost per 1,000 decisions, LOC, abstain/fallback rates.
-- [ ] Charts: accuracy vs cost, accuracy vs latency, calibration (confidence vs actual accuracy for JEV),
-      hybrid accuracy-vs-fallback curve.
-- [ ] Each hypothesis marked confirmed / rejected / mixed, with the number that decides it.
-- [ ] Total API spend for the project recorded.
+### Phase 7: Final benchmark and report
+- [ ] All dispatchers run once on the full 3,080-message test split.
+- [ ] Consistency: a 200-message subset re-run 3 times for LLM and JEV; changed answers reported.
+- [ ] `results/summary.md`: action and service accuracy, p50/p95 latency, cost per 1,000, LOC,
+      abstain and fallback rates, safety-critical precision.
+- [ ] Charts: accuracy vs cost, accuracy vs latency, JEV calibration, hybrid curve, rules effort curve.
+- [ ] Each hypothesis marked confirmed / rejected / mixed, with the deciding number.
+- [ ] Total API spend recorded.
 
-### Phase 6b: Day-2 change (crypto)
-- [ ] Three crypto actions added as defined in `docs/product.md` §12, with a disclosed labelled set.
-- [ ] Lines changed and accuracy (new actions and regressions on the original 77) reported per router.
+### Phase 8: Day-2 change (crypto)
+- [ ] Three crypto actions as in `docs/product.md` §12, with a disclosed labelled set.
+- [ ] Lines changed, accuracy on new actions and regressions on the original 77, per dispatcher.
 
-### Phase 7: Go public
+### Phase 9: Router Arena
+- [ ] One page: a message, four dispatchers side by side, the bank's answer.
+- [ ] Replay mode from final results (public); live mode with local keys.
+
+### Phase 10: Go public
 - [ ] README rewritten around the results; quick start verified from a fresh clone.
 - [ ] No secrets in history; `.env` never committed.
-- [ ] Repository made public.
-- [ ] LinkedIn post drafted and reviewed; it cites Glean and Banking77 and links the repo.
+- [ ] Repository made public; LinkedIn post drafted and reviewed, citing Glean and Banking77.

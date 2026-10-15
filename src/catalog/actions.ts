@@ -145,7 +145,7 @@ export const ACTIONS: readonly Action[] = [
     "card_payments",
     "unrecognised",
     "The customer does not recognise a card payment",
-    "List recent card payments and offer to freeze the card",
+    "Freeze the card, then list recent card payments",
   ),
   a(
     "card_payment_wrong_exchange_rate",
@@ -210,7 +210,7 @@ export const ACTIONS: readonly Action[] = [
     "atm",
     "unrecognised",
     "The customer does not recognise a cash withdrawal",
-    "List recent withdrawals and offer to freeze the card",
+    "Freeze the card, then list recent withdrawals",
   ),
   a(
     "declined_cash_withdrawal",

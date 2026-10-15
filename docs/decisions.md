@@ -30,6 +30,17 @@ A real product must know which handler to run. Accuracy is reported at both leve
 The Arena runs in replay mode publicly (precomputed decisions, no API cost or abuse) and live mode
 locally with the user's own keys.
 
+## D8: Rules baseline is an effort curve, not a single number
+The rules dispatcher is written in stages by an AI coding assistant from the train split only, with an
+effort log, and reviewed by the project author. Accuracy is measured after each stage, so the finding is
+the shape of the accuracy-vs-lines curve rather than one possibly weak baseline. Disclosed in the report.
+
+## D9: Git workflow
+`main` gets one squashed commit per finished phase. Work in progress lives on local phase branches and
+is backed up to a single `wip` branch on GitHub (overwritten, deleted after each phase lands). Scratch
+notes and development runs stay in git-ignored `.local/` and `results/runs/`. Commits are authored by
+the project owner and co-authored by Claude.
+
 ## Open
 - LLM baseline model (proposed: a fast, cheap current Claude model).
 - JEV API access.
