@@ -133,8 +133,7 @@ describe("reference dispatchers", () => {
     expect(renderReport([{ label: "oracle", records: [] }])).toContain("| oracle |");
   });
 
-  it("names the phase for dispatchers not built yet", () => {
-    expect(() => createRouter("llm", toy)).toThrow("Phase 4");
+  it("rejects an unknown dispatcher", () => {
     expect(() => createRouter("nope", toy)).toThrow("unknown dispatcher");
   });
 });

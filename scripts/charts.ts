@@ -24,10 +24,10 @@ const PH = H - M.top - M.bottom;
 /** Entity colours are fixed across every chart (validated, see dataviz palette). */
 const STYLE = `<style>
   svg { --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781; --grid:#e1e0d9;
-        --jev:#2a78d6; --rules:#eb6834; --hybrid:#1baf7a; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+        --jev:#2a78d6; --rules:#eb6834; --hybrid:#1baf7a; --llm:#eda100; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
   @media (prefers-color-scheme: dark) {
     svg { --surface:#1a1a19; --ink:#f0efec; --ink2:#c3c2b7; --muted:#898781; --grid:#2c2c2a;
-          --jev:#3987e5; --rules:#d95926; --hybrid:#199e70; }
+          --jev:#3987e5; --rules:#d95926; --hybrid:#199e70; --llm:#c98500; }
   }
   .bg { fill: var(--surface); } .title { fill: var(--ink); font-size: 16px; font-weight: 600; }
   .sub { fill: var(--ink2); font-size: 12px; } .tick { fill: var(--muted); font-size: 11px; }
@@ -287,9 +287,63 @@ ${STYLE}<rect class="bg" width="${W}" height="${h}" rx="8"/>
 ${body}<text class="axis" x="${(left + W - 60) / 2}" y="${h - 6}" text-anchor="middle">Exact action accuracy</text></svg>\n`;
 }
 
+// 5. Accuracy vs speed: rules, JEV and the LLM (test split)
+function speedChart(): string {
+  const p50 = (rs: RunRecord[]) =>
+    [...rs.map((r) => r.wallMs)].sort((a, b) => a - b)[Math.floor(rs.length / 2)] ?? 0;
+  const points = (
+    [
+      ["Rules", "rules", "--rules", "below"],
+      ["JEV", "jev", "--jev", "left"],
+      ["LLM (gpt-6-luna)", "llm", "--llm", "below"],
+    ] as const
+  ).map(([label, name, color, place]) => {
+    const rs = readRun(`results/runs/${name}_test_3080.jsonl`);
+    const cost = (1000 * rs.reduce((sum, r) => sum + r.costUsd, 0)) / rs.length;
+    return { label, color, place, ms: p50(rs), acc: rs.filter(isCorrect).length / rs.length, cost };
+  });
+  const x: Axis = {
+    min: -1,
+    max: 4,
+    ticks: [-1, 0, 1, 2, 3, 4],
+    fmt: (v) => (v < 0 ? "0.1 ms" : v < 3 ? `${10 ** v} ms` : `${10 ** (v - 3)} s`),
+    title: "Median time per decision (log scale)",
+  };
+  const y: Axis = {
+    min: 0.5,
+    max: 0.9,
+    ticks: [0.5, 0.6, 0.7, 0.8, 0.9],
+    fmt: (v) => `${Math.round(v * 100)}%`,
+    title: "Exact action accuracy",
+  };
+  const { sx, sy } = scaler(x, y);
+  const ms = (v: number) => (v < 10 ? `${v.toFixed(2)} ms` : `${Math.round(v)} ms`);
+  const body = points
+    .map((p) => {
+      const cx = sx(Math.log10(p.ms));
+      const cy = sy(p.acc);
+      const cost = p.cost ? `$${p.cost.toFixed(3)} per 1,000` : "free";
+      const [tx, ty, anchor] = p.place === "left" ? [cx - 14, cy - 2, "end"] : [cx, cy + 26, "middle"];
+      return (
+        dot(cx, cy, p.color, `${p.label}: ${pct(p.acc)} right, ${ms(p.ms)}, ${cost}`, 6) +
+        `<text class="label" x="${tx}" y="${ty}" text-anchor="${anchor}">${esc(p.label)} ${pct(p.acc)}</text>` +
+        `<text class="note" x="${tx}" y="${ty + 14}" text-anchor="${anchor}">${ms(p.ms)} · ${cost}</text>`
+      );
+    })
+    .join("");
+  return frame(
+    "JEV matches the LLM's accuracy at a ninth of the latency",
+    "Banking77 test split, 3,080 messages; the same 77 descriptions for JEV and the LLM",
+    x,
+    y,
+    body,
+  );
+}
+
 mkdirSync(OUT, { recursive: true });
 writeFileSync(`${OUT}/effort-curve.svg`, await effortChart());
 writeFileSync(`${OUT}/accuracy-vs-workload.svg`, tradeoffChart());
 writeFileSync(`${OUT}/jev-calibration.svg`, calibrationChart());
 writeFileSync(`${OUT}/accuracy-by-service.svg`, servicesChart());
-console.log(`wrote 4 charts to ${OUT}/`);
+writeFileSync(`${OUT}/accuracy-vs-speed.svg`, speedChart());
+console.log(`wrote 5 charts to ${OUT}/`);

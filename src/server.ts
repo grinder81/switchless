@@ -1,4 +1,4 @@
-/** Local dev server: `pnpm dev`. DISPATCHER=rules (default) | oracle. */
+/** Local dev server: `pnpm dev`. DISPATCHER=rules (default) | oracle | jev | llm | hybrid. */
 import { serve } from "@hono/node-server";
 import { createBank } from "./bank/bank.js";
 import { loadSplit } from "./data/banking77.js";

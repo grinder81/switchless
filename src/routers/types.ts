@@ -10,6 +10,8 @@ export interface Decision {
   router: string;
   /** Next most likely actions, for "Did you mean…?" when the router is unsure. */
   alternatives?: { action: string; p: number }[];
+  /** Model version the provider reports, for models that cannot be pinned. */
+  model?: string;
 }
 
 export interface Router {
