@@ -91,7 +91,8 @@ JEV reasonably picks the PIN action. Descriptions are the only lever a zero-shot
 the kind of fix Phase 6 may make (on train data only, and reported).
 
 **Safety-critical precision is lower than the rules (68.9% vs 75.0%)**, but recall is much higher
-(67.7% vs 38.7%): JEV catches far more genuine lost or compromised cards. Some of its "wrong" freezes
+(67.7% vs 38.7%). These are exact-intent measures: JEV picked the exact safety-critical action for far
+more of the lost or compromised cases. Some of its "wrong" freezes
 pick a different freeze-first action (e.g. `atm.unrecognised` → `security.compromised_card`), which
 still freezes the card. Phase 6's confidence gate and the hard-rules layer address the rest.
 

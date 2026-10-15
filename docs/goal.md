@@ -6,6 +6,10 @@ Show, on a public and reproducible benchmark, that the hand-written "core router
 system can be replaced by a zero-shot decision model (JEV): less code, faster and cheaper than an LLM
 router, and safe in production through a hybrid with a confidence fallback.
 
+> This is the original framing, kept as written. What was actually tested is narrower: routing
+> free-text banking support messages to 77 intents. "Safe in production" was not established. See
+> [final results](final-results.md) for what the evidence supports.
+
 ## Question
 
 For routing customer requests to the right microservice, how do hand-written rules, an LLM router and

@@ -82,3 +82,15 @@ OpenAI offers no dated snapshot, so each decision records the model the API repo
 `gpt-6-luna`, 2026-10-15). Cost uses the standard-tier price list of 2026-10-15 ($0.10 input, $0.01
 cached input, $0.125 cache writes, $0.50 output per million tokens). Run once on the held-out sample and
 once on the test split, with nothing tuned in between. A Claude run can be added later as a second LLM.
+
+## D15: Evidence preserved and claims narrowed after review
+An independent review found the published claims broader than the evidence and the raw runs
+unpublished. In response: the 16 original run files are committed unchanged in `results/raw/` with
+full SHA-256 hashes; the dataset download is pinned to commit `57ec275` and verified by hash;
+`pnpm analyze` recomputes intervals, the paired LLM-vs-JEV comparison, an exploratory comparison at
+the same number of referrals (with tie-breaking and tie sensitivity), and incorrect selections of
+state-changing handlers, from the raw files without API calls. Lines of code use one rule everywhere
+(own files plus the routers a router is built from). Claims are scoped to free-text banking intent
+routing; equivalence, "safest" and production-safety claims were removed; human resolution after a
+referral is stated as not measured. The analysis also surfaced that the LLM was detectably more
+accurate than JEV on the held-out sample (+2.2 points), which the earlier report did not state.

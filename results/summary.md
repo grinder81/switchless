@@ -2,12 +2,12 @@
 
 | Run | n | Action acc. | Service acc. | Abstain | Errors | p50 | p95 | Cost / 1k | ECE | Safety prec. | Safety recall | LOC |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| hybrid · test · 3080 | 3080 | 74.1% | 78.5% | 18.3% | 0.0% | 112 ms | 162 ms | $0.0833 | 0.072 | 91.7% | 66.5% | 25 |
+| hybrid · test · 3080 | 3080 | 74.1% | 78.5% | 18.3% | 0.0% | 112 ms | 162 ms | $0.0833 | 0.072 | 91.7% | 66.5% | 888 |
 | jev · test · 3080 | 3080 | 80.9% | 90.4% | 0.0% | 0.0% | 111 ms | 158 ms | $0.0833 | 0.090 | 77.6% | 79.5% | 60 |
 | llm · test · 3080 | 3080 | 81.5% | 90.5% | 0.0% | 0.0% | 975 ms | 1701 ms | $0.0277 | 0.087 | 81.6% | 86.5% | 95 |
 | rules · test · 3080 | 3080 | 65.5% | 73.5% | 17.0% | 0.0% | 0.29 ms | 0.70 ms | $0.0000 | 0.211 | 84.4% | 57.0% | 772 |
 
-_Action acc._ = exact action (strict). _Service acc._ = right microservice (lenient). _ECE_ = expected calibration error (0 is perfect). _Safety_ = decisions that freeze a card or sign out devices.
+_Action acc._ = exact action (strict). _Service acc._ = right microservice (lenient). _ECE_ = expected calibration error (0 is perfect). _Safety prec./recall_ = exact-intent precision and recall on the five safety-critical intents (freeze, block or sign out); they do not show whether an appropriate protective action happened. _LOC_ = own files plus the routers a router is built from.
 
 ## hybrid · test · 3080
 
