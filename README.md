@@ -51,6 +51,8 @@ results/           benchmark outputs (raw runs git-ignored, summaries committed)
 pnpm install
 pnpm data:download
 pnpm test
+pnpm demo        # walk through the four customer stories
+pnpm dev         # local server on :3000, POST /help
 ```
 
 Requires Node 22+ and pnpm.
