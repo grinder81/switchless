@@ -7,9 +7,11 @@ It starts as a `switch` statement and grows into thousands of lines of rules. Th
 happens when you replace that code with a decision model, specifically [JEV](https://docs.langchain.com/oss/python/integrations/providers/typesafe) by TypeSafe AI,
 and compares it head-to-head with hand-written rules and an LLM router.
 
-> Status: **Phases 1, 2, 3 and 5 done**. On the same 1,000 held-out messages, hand-written rules reach
+> Status: **Phases 1, 2, 3, 5 and 6 done**. On the same 1,000 held-out messages, hand-written rules reach
 > 63.0% action accuracy with 772 lines ([effort log](docs/rules-effort-log.md)); JEV reaches 78.5% with
-> 47 lines, 114 ms and $0.08 per 1,000 decisions ([results](docs/jev-results.md)). LLM baseline next. See [`docs/goal.md`](docs/goal.md).
+> 47 lines, 114 ms and $0.08 per 1,000 decisions ([results](docs/jev-results.md)). A hybrid where rules
+> and JEV must agree (or JEV is ≥90% sure) answers 79% of messages at 89.8% accuracy, versus 78.8% for
+> rules at the same workload ([hybrid](docs/hybrid-results.md)). See [`docs/goal.md`](docs/goal.md).
 
 ## The experiment
 
@@ -61,6 +63,7 @@ pnpm bench --router oracle --sample 1000
 pnpm report                           # combine all runs → results/runs/summary.md
 pnpm loc                              # lines of code per dispatcher
 pnpm rules:curve                      # rules accuracy vs lines of code, stage by stage
+pnpm hybrid:tune                      # compare hybrid designs on the tuning sample
 ```
 
 Requires Node 22+ and pnpm. The `jev` dispatcher needs `TYPESAFE_API_KEY`; behind an HTTP proxy,

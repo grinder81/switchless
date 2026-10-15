@@ -8,6 +8,8 @@ export interface Decision {
   costUsd: number;
   /** Which router (or hybrid stage) made the final call. */
   router: string;
+  /** Next most likely actions, for "Did you mean…?" when the router is unsure. */
+  alternatives?: { action: string; p: number }[];
 }
 
 export interface Router {

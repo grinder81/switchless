@@ -24,7 +24,7 @@ export interface SystemOneClient {
     model: string;
   }): PromiseLike<{
     model: string;
-    answers: { action: { choice: string; confidence: number } };
+    answers: { action: { choice: string; confidence: number; probabilities: Record<string, number> } };
     usage: { input_tokens: number | null };
   }>;
 }
@@ -41,14 +41,19 @@ export class JEVRouter implements Router {
       questions: { action: ACTION_QUESTION },
       model: JEV_MODEL,
     });
-    const { choice: action, confidence } = res.answers.action;
+    const { choice: action, confidence, probabilities } = res.answers.action;
     if (!ACTION_BY_ID.has(action)) throw new Error(`JEV returned unknown action "${action}"`);
+    const alternatives = Object.entries(probabilities)
+      .map(([a, p]) => ({ action: a, p }))
+      .sort((x, y) => y.p - x.p)
+      .slice(0, 3);
     return {
       action,
       confidence,
       latencyMs: performance.now() - start,
       costUsd: (res.usage.input_tokens ?? 0) * JEV_USD_PER_INPUT_TOKEN,
       router: this.name,
+      alternatives,
     };
   }
 }

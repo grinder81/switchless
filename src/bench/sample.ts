@@ -60,3 +60,22 @@ export function stratifiedSample(examples: Example[], n: number, seed = 42): Ind
   });
   return picked.sort((a, b) => a.index - b.index);
 }
+
+/** Seed of the held-out sample every reported number is measured on. */
+export const HELD_OUT_SEED = 42;
+/** Seed of the tuning sample used to choose hybrid settings (disjoint from the held-out sample). */
+export const TUNING_SEED = 7;
+
+/**
+ * Named train samples: `heldout` is the measurement sample; `tuning` is drawn from the rest of the
+ * train split, so tuning never sees a held-out message. Indices refer to the full train split.
+ */
+export function trainSample(train: Example[], set: "heldout" | "tuning", n = 1000): Indexed[] {
+  const heldOut = stratifiedSample(train, n, HELD_OUT_SEED);
+  if (set === "heldout") return heldOut;
+  const taken = new Set(heldOut.map((e) => e.index));
+  const pool = train.map((e, index) => ({ ...e, index })).filter((e) => !taken.has(e.index));
+  return stratifiedSample(pool, n, TUNING_SEED)
+    .map((e) => pool[e.index] as Indexed)
+    .sort((a, b) => a.index - b.index);
+}

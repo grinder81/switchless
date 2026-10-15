@@ -102,11 +102,15 @@ Order: the product and harness need no API keys; JEV is tested early as a go/no-
 - [x] Disclosed as written by an AI coding assistant; awaiting review by the project author.
 - [x] The product runs end to end on the rules: `pnpm dev`, `pnpm demo`.
 
-### Phase 6: Hybrid
-- [ ] Order: rules → JEV (accept if confidence ≥ τ) → LLM.
-- [ ] τ chosen on the 1,000-message train sample from an accuracy-vs-fallback curve; frozen in
-      `docs/decisions.md` before Phase 7.
-- [ ] Each decision records which stage answered.
+### Phase 6: Hybrid ✅
+- [x] Design chosen from data, not assumed (D12): rules-first, JEV-first, agreement and JEV-only were
+      compared; **agreement @ 0.9** won. An LLM fallback slot is left for Phase 4.
+- [x] τ chosen on a separate 1,000-message tuning sample (disjoint from held-out) under a
+      pre-registered rule; frozen in `src/routers/hybrid.ts` before the held-out run.
+- [x] Each decision records which stage answered (`hybrid:agreement|jev|human`).
+- [x] Held-out: 89.8% accuracy on answered at 20.6% escalated (rules: 78.8% at 20.0%);
+      safety-critical precision 86.8% (`docs/hybrid-results.md`).
+- [x] "Did you mean…?" suggestions on escalation and `POST /action` for button clicks.
 
 ### Phase 7: Final benchmark and report
 - [ ] All dispatchers run once on the full 3,080-message test split.
