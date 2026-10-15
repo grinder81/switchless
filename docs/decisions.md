@@ -47,6 +47,15 @@ stratified sample (seed 42) that was never inspected. Stage files are append-onl
 each point of the effort curve is reproducible; fixes are added as later, more specific rules. Rule
 writing stopped after stage 8 (−0.1 points on dev); the final dispatcher uses all eight stages.
 
+## D11: JEV request design
+One Choice question per message: the 77 action ids as options, each described by its catalogue
+description; `state` is only the customer's message, the same information the LLM gets. The model is
+pinned to `jev-1.13.0` rather than the moving `jev-latest` alias. Cost is computed from reported input
+tokens at $0.042 per million (output is free). TypeSafe documents that jev-1.13 can lean toward the
+first option of a Choice, so option order is fixed (catalogue order) and identical for JEV and the LLM,
+and Phase 7 adds an order-shuffle consistency check. A flat 77-way choice is tried first because it is
+the zero-code baseline; a two-level variant (service, then action) is the fallback if it underperforms.
+
 ## Open
 - LLM baseline model (proposed: a fast, cheap current Claude model).
-- JEV API access.
+- JEV API access: `TYPESAFE_API_KEY` must be set in the environment before the Phase 3 run.
