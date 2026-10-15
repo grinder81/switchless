@@ -7,10 +7,11 @@ It starts as a `switch` statement and grows into thousands of lines of rules. Th
 happens when you replace that code with a decision model, specifically [JEV](https://docs.langchain.com/oss/python/integrations/providers/typesafe) by TypeSafe AI,
 and compares it head-to-head with hand-written rules and an LLM router.
 
-> Status: **final benchmark done** (LLM baseline still to come). On the Banking77 test split
-> (3,080 messages): hand-written rules 65.5% exact action with 772 lines; **JEV 80.9% with 60 lines**,
-> 111 ms and $0.08 per 1,000; a hybrid where rules and JEV must agree answers 82% of messages at
-> **90.7%** accuracy. See [final results](docs/final-results.md).
+> Status: **final benchmark done**. On the Banking77 test split (3,080 messages): hand-written rules
+> 65.5% exact action with 772 lines; **JEV 80.9% with 60 lines**, 111 ms and $0.08 per 1,000; an LLM
+> router (`gpt-6-luna`) 81.5%, statistically the same, but at 975 ms (9× slower) and $0.03 per 1,000;
+> a hybrid where rules and JEV must agree answers 82% of messages at **90.7%** accuracy.
+> See [final results](docs/final-results.md).
 
 ![Rules effort curve vs JEV](results/charts/effort-curve.svg)
 
@@ -57,7 +58,7 @@ pnpm install
 pnpm data:download
 pnpm test
 pnpm demo        # the four customer stories, on the hand-written rules
-pnpm dev         # local server on :3000, POST /help (DISPATCHER=rules|oracle)
+pnpm dev         # local server on :3000, POST /help (DISPATCHER=rules|oracle|jev|llm|hybrid)
 
 pnpm bench --router random            # measure a dispatcher on a 300-message train sample
 pnpm bench --router oracle --sample 1000
@@ -67,8 +68,8 @@ pnpm rules:curve                      # rules accuracy vs lines of code, stage b
 pnpm hybrid:tune                      # compare hybrid designs on the tuning sample
 ```
 
-Requires Node 22+ and pnpm. The `jev` dispatcher needs `TYPESAFE_API_KEY`; behind an HTTP proxy,
-also set `NODE_USE_ENV_PROXY=1` so Node's `fetch` uses it.
+Requires Node 22+ and pnpm. The `jev` dispatcher needs `TYPESAFE_API_KEY` and the `llm` dispatcher
+`OPENAI_API_KEY`; behind an HTTP proxy, also set `NODE_USE_ENV_PROXY=1` so Node's `fetch` uses it.
 
 ## Prior work
 

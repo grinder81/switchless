@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 460" width="720" height="460" role="img" aria-label="Accuracy by service, rules vs JEV">
 <style>
   svg { --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781; --grid:#e1e0d9;
-        --jev:#2a78d6; --rules:#eb6834; --hybrid:#1baf7a; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+        --jev:#2a78d6; --rules:#eb6834; --hybrid:#1baf7a; --llm:#eda100; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
   @media (prefers-color-scheme: dark) {
     svg { --surface:#1a1a19; --ink:#f0efec; --ink2:#c3c2b7; --muted:#898781; --grid:#2c2c2a;
-          --jev:#3987e5; --rules:#d95926; --hybrid:#199e70; }
+          --jev:#3987e5; --rules:#d95926; --hybrid:#199e70; --llm:#c98500; }
   }
   .bg { fill: var(--surface); } .title { fill: var(--ink); font-size: 16px; font-weight: 600; }
   .sub { fill: var(--ink2); font-size: 12px; } .tick { fill: var(--muted); font-size: 11px; }

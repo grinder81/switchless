@@ -87,11 +87,13 @@ Order: the product and harness need no API keys; JEV is tested early as a go/no-
       89.2% service accuracy, 114 ms p50, $0.083 per 1,000 (`docs/jev-results.md`).
 - [x] **Gate:** recommendation GO; awaiting the project author's review.
 
-### Phase 4: LLM dispatcher
-- [ ] Model and version pinned; temperature 0; structured output.
-- [ ] Prompt built from the catalogue only; no train examples (zero-shot, like JEV).
-- [ ] Token usage and cost recorded per decision; retries and rate limits handled, failures logged.
-- [ ] Run on the same 300-message train sample.
+### Phase 4: LLM dispatcher ✅
+- [x] `gpt-6-luna`, structured output (enum of the 77 ids), reasoning off (D14). Not pinnable and no
+      temperature 0 on this model, so the reported model is recorded per decision.
+- [x] Prompt built from the catalogue only; no train examples (zero-shot, like JEV).
+- [x] Cost recorded per decision (input, cached input, cache writes, output); SDK retries with backoff;
+      failures logged by the runner (0 in 4,080).
+- [x] Held-out 1,000: 80.7%; test 3,080: 81.5% (JEV 80.9%, difference not significant).
 
 ### Phase 5: Rules dispatcher (effort curve) ✅
 - [x] Written from the train split only (dev part), in 8 append-only stages; effort log in
@@ -112,7 +114,7 @@ Order: the product and harness need no API keys; JEV is tested early as a go/no-
       safety-critical precision 86.8% (`docs/hybrid-results.md`).
 - [x] "Did you mean…?" suggestions on escalation and `POST /action` for button clicks.
 
-### Phase 7: Final benchmark and report ✅ (LLM to be added)
+### Phase 7: Final benchmark and report ✅
 - [x] Rules, JEV and hybrid run once on the full 3,080-message test split from frozen code (D13).
       The LLM is added later as a separate run.
 - [x] Consistency: a 200-message subset re-run twice for JEV (0.5–2% changed) and once with options
@@ -120,10 +122,11 @@ Order: the product and harness need no API keys; JEV is tested early as a go/no-
 - [x] `results/summary.md`: action and service accuracy, p50/p95 latency, cost per 1,000, LOC,
       abstain rate, calibration, safety-critical precision and recall, per-service breakdowns.
 - [x] Charts (`pnpm charts`): rules effort curve vs JEV, accuracy vs human workload, JEV calibration,
-      accuracy by service. (Accuracy vs cost is left for the LLM update, when there are two paid options.)
-- [x] Hypotheses marked in `docs/final-results.md`: H1 confirmed, H3 confirmed with caveat, H4 mixed,
-      H2 pending the LLM.
-- [x] Total API spend recorded ($0.81).
+      accuracy by service, accuracy vs speed (rules, JEV, LLM).
+- [x] Hypotheses marked in `docs/final-results.md`: H1 confirmed, H2 partly confirmed (same accuracy,
+      9× faster, but not cheaper), H3 confirmed with caveat, H4 mixed.
+- [x] LLM added as a separate test run after Phase 4.
+- [x] Total API spend recorded ($0.81 TypeSafe, $0.11 OpenAI).
 
 ### Phase 8: Day-2 change (crypto)
 - [ ] Three crypto actions as in `docs/product.md` §12, with a disclosed labelled set.

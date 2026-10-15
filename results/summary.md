@@ -4,6 +4,7 @@
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | hybrid · test · 3080 | 3080 | 74.1% | 78.5% | 18.3% | 0.0% | 112 ms | 162 ms | $0.0833 | 0.072 | 91.7% | 66.5% | 25 |
 | jev · test · 3080 | 3080 | 80.9% | 90.4% | 0.0% | 0.0% | 111 ms | 158 ms | $0.0833 | 0.090 | 77.6% | 79.5% | 60 |
+| llm · test · 3080 | 3080 | 81.5% | 90.5% | 0.0% | 0.0% | 975 ms | 1701 ms | $0.0277 | 0.087 | 81.6% | 86.5% | 95 |
 | rules · test · 3080 | 3080 | 65.5% | 73.5% | 17.0% | 0.0% | 0.29 ms | 0.70 ms | $0.0000 | 0.211 | 84.4% | 57.0% | 772 |
 
 _Action acc._ = exact action (strict). _Service acc._ = right microservice (lenient). _ECE_ = expected calibration error (0 is perfect). _Safety_ = decisions that freeze a card or sign out devices.
@@ -88,6 +89,49 @@ _Action acc._ = exact action (strict). _Service acc._ = right microservice (leni
 | 0.7–0.8 | 179 | 74.6% | 54.7% |
 | 0.8–0.9 | 238 | 84.5% | 66.4% |
 | 0.9–1.0 | 2225 | 98.7% | 91.8% |
+
+## llm · test · 3080
+
+### Accuracy by service
+
+| Service | n | Action acc. |
+|---|---:|---:|
+| Account | 80 | 100.0% |
+| ATM & Cash | 280 | 87.9% |
+| Card Payments | 320 | 82.8% |
+| Cards | 480 | 78.1% |
+| Disputes | 200 | 81.5% |
+| FX | 200 | 78.5% |
+| Identity | 240 | 89.2% |
+| Security | 240 | 91.3% |
+| Top-up | 440 | 78.0% |
+| Transfers | 440 | 70.2% |
+| Virtual Cards | 160 | 87.5% |
+
+### Most common cross-service mistakes
+
+| Should be | Went to | Count |
+|---|---|---:|
+| topup | transfers | 47 |
+| cards | security | 45 |
+| card_payments | topup | 30 |
+| disputes | card_payments | 27 |
+| transfers | card_payments | 24 |
+
+### Calibration
+
+| Confidence | n | Mean conf. | Accuracy |
+|---|---:|---:|---:|
+| 0.0–0.1 | 2 | 5.0% | 0.0% |
+| 0.1–0.2 | 8 | 15.8% | 12.5% |
+| 0.2–0.3 | 18 | 25.4% | 27.8% |
+| 0.3–0.4 | 28 | 35.3% | 35.7% |
+| 0.4–0.5 | 50 | 44.3% | 40.0% |
+| 0.5–0.6 | 75 | 55.4% | 40.0% |
+| 0.6–0.7 | 91 | 65.5% | 63.7% |
+| 0.7–0.8 | 221 | 75.6% | 62.4% |
+| 0.8–0.9 | 395 | 85.6% | 65.3% |
+| 0.9–1.0 | 2192 | 97.4% | 90.8% |
 
 ## rules · test · 3080
 

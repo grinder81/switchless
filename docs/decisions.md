@@ -71,6 +71,14 @@ with the rules stages, JEV request, model version, hybrid design and threshold a
 baseline is added to the same report later as a separate run; nothing already measured is re-tuned
 after seeing test results.
 
-## Open
-- LLM baseline model (proposed: a fast, cheap current Claude model).
-- JEV API access: `TYPESAFE_API_KEY` must be set in the environment before the Phase 3 run.
+## D14: LLM baseline is OpenAI gpt-6-luna
+The LLM baseline uses OpenAI's `gpt-6-luna` (budget available on that account), not a Claude model as
+first proposed. Luna is OpenAI's cheap, fast tier: the model a team would realistically put in front of
+every request, and so the fair comparison for JEV. Request: same instruction and 77 descriptions as JEV
+(system prompt, catalogue order), the customer's message as the user turn, structured output whose
+`action` is an enum of the 77 ids plus a self-reported `confidence`. `reasoning_effort: "none"`, because
+a dispatcher answers in one step. gpt-6-luna does not accept `temperature: 0` or log-probabilities, and
+OpenAI offers no dated snapshot, so each decision records the model the API reports (all 4,080 were
+`gpt-6-luna`, 2026-10-15). Cost uses the standard-tier price list of 2026-10-15 ($0.10 input, $0.01
+cached input, $0.125 cache writes, $0.50 output per million tokens). Run once on the held-out sample and
+once on the test split, with nothing tuned in between. A Claude run can be added later as a second LLM.
