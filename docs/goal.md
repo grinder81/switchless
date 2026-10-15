@@ -92,11 +92,14 @@ Order: the product and harness need no API keys; JEV is tested early as a go/no-
 - [ ] Token usage and cost recorded per decision; retries and rate limits handled, failures logged.
 - [ ] Run on the same 300-message train sample.
 
-### Phase 5: Rules dispatcher (effort curve)
-- [ ] Written from the train split only, in stages, with an effort log (time and lines per stage).
-- [ ] Accuracy measured after each stage on the 1,000-message train sample: the accuracy-vs-LOC curve.
-- [ ] Abstains when no rule matches.
-- [ ] Disclosed as written by an AI coding assistant; reviewed by the project author.
+### Phase 5: Rules dispatcher (effort curve) ✅
+- [x] Written from the train split only (dev part), in 8 append-only stages; effort log in
+      `docs/rules-effort-log.md` (rules and lines per stage).
+- [x] Accuracy measured after each stage on the held-out 1,000-message train sample: the
+      accuracy-vs-LOC curve (`pnpm rules:curve`). Final: 63.0% action accuracy, 772 lines.
+- [x] Abstains when no rule matches (20% of messages).
+- [x] Disclosed as written by an AI coding assistant; awaiting review by the project author.
+- [x] The product runs end to end on the rules: `pnpm dev`, `pnpm demo`.
 
 ### Phase 6: Hybrid
 - [ ] Order: rules → JEV (accept if confidence ≥ τ) → LLM.

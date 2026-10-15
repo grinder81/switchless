@@ -7,7 +7,9 @@ It starts as a `switch` statement and grows into thousands of lines of rules. Th
 happens when you replace that code with a decision model, specifically [JEV](https://docs.langchain.com/oss/python/integrations/providers/typesafe) by TypeSafe AI,
 and compares it head-to-head with hand-written rules and an LLM router.
 
-> Status: **Phases 1–2 done**: the Kestrel Bank product runs end to end and the benchmark harness is verified with reference dispatchers. JEV, LLM and rules dispatchers come next. See [`docs/goal.md`](docs/goal.md).
+> Status: **Phases 1, 2 and 5 done**. Kestrel Bank runs end to end on a hand-written rules dispatcher
+> (63.0% action accuracy, 772 lines, 20% escalated; see the [effort log](docs/rules-effort-log.md)).
+> JEV and LLM dispatchers come next. See [`docs/goal.md`](docs/goal.md).
 
 ## The experiment
 
@@ -51,13 +53,14 @@ results/           benchmark outputs (raw runs git-ignored, summaries committed)
 pnpm install
 pnpm data:download
 pnpm test
-pnpm demo        # walk through the four customer stories
-pnpm dev         # local server on :3000, POST /help
+pnpm demo        # the four customer stories, on the hand-written rules
+pnpm dev         # local server on :3000, POST /help (DISPATCHER=rules|oracle)
 
 pnpm bench --router random            # measure a dispatcher on a 300-message train sample
 pnpm bench --router oracle --sample 1000
 pnpm report                           # combine all runs → results/runs/summary.md
 pnpm loc                              # lines of code per dispatcher
+pnpm rules:curve                      # rules accuracy vs lines of code, stage by stage
 ```
 
 Requires Node 22+ and pnpm.

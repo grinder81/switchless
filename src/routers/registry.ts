@@ -1,6 +1,7 @@
 import type { Example } from "../data/banking77.js";
 import { OracleRouter } from "./oracle.js";
 import { RandomRouter } from "./random.js";
+import { RulesRouter } from "./rules.js";
 import type { Router } from "./types.js";
 
 /** Dispatchers available to the benchmark, by name. */
@@ -10,7 +11,6 @@ export type RouterName = (typeof ROUTERS)[number];
 const PLANNED: Partial<Record<RouterName, string>> = {
   jev: "Phase 3",
   llm: "Phase 4",
-  rules: "Phase 5",
   hybrid: "Phase 6",
 };
 
@@ -20,6 +20,8 @@ export function createRouter(name: string, labelled: Example[]): Router {
       return new OracleRouter(labelled);
     case "random":
       return new RandomRouter();
+    case "rules":
+      return new RulesRouter();
     default: {
       const phase = PLANNED[name as RouterName];
       throw new Error(
