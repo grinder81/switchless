@@ -24,7 +24,8 @@
     "rules:curve": "tsx scripts/rules-curve.ts",
     "hybrid:tune": "tsx scripts/hybrid-tune.ts",
     "consistency": "tsx scripts/consistency.ts",
-    "charts": "tsx scripts/charts.ts"
+    "charts": "tsx scripts/charts.ts",
+    "analyze": "tsx scripts/analyze.ts"
   },
   "dependencies": {
     "@hono/node-server": "2.1.5",

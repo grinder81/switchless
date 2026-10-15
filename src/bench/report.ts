@@ -28,7 +28,7 @@ export function renderReport(runs: NamedRun[], title = "Benchmark results"): str
   }
   out.push(
     "",
-    "_Action acc._ = exact action (strict). _Service acc._ = right microservice (lenient). _ECE_ = expected calibration error (0 is perfect). _Safety_ = decisions that freeze a card or sign out devices.",
+    "_Action acc._ = exact action (strict). _Service acc._ = right microservice (lenient). _ECE_ = expected calibration error (0 is perfect). _Safety prec./recall_ = exact-intent precision and recall on the five safety-critical intents (freeze, block or sign out); they do not show whether an appropriate protective action happened. _LOC_ = own files plus the routers a router is built from.",
   );
 
   for (const r of runs) {

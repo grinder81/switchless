@@ -98,7 +98,7 @@ async function effortChart(): Promise<string> {
       if ((await router.route(e.text)).action === ACTION_BY_INTENT.get(e.intent)?.id) ok++;
     points.push({ lines, acc: ok / heldOut.length, stage: k });
   }
-  const jevRuns = readRun("results/runs/jev_train_1000.jsonl");
+  const jevRuns = readRun("results/raw/jev_train_1000.jsonl");
   const jev = { lines: loc("jev.ts"), acc: jevRuns.filter(isCorrect).length / jevRuns.length };
   const x: Axis = {
     min: 0,
@@ -134,8 +134,8 @@ async function effortChart(): Promise<string> {
     `<text class="note" x="${sx(last?.lines ?? 0) + 10}" y="${sy(last?.acc ?? 0) + 18}">8 stages, ${last?.lines} lines</text>` +
     `<text class="label" x="${sx(jev.lines) + 12}" y="${sy(jev.acc) - 8}">JEV ${pct(jev.acc)}, ${jev.lines} lines</text>`;
   return frame(
-    "Hand-written rules flatten out; JEV starts higher",
-    "Exact action accuracy on 1,000 held-out Banking77 messages, by lines of dispatcher code",
+    "More rule-writing stopped paying off; JEV started higher",
+    "Exact action accuracy on 1,000 held-out Banking77 messages, by lines of router code",
     x,
     y,
     body,
@@ -144,9 +144,9 @@ async function effortChart(): Promise<string> {
 
 // 2. Accuracy vs human workload (test split)
 function tradeoffChart(): string {
-  const jev = readRun("results/runs/jev_test_3080.jsonl");
-  const rules = readRun("results/runs/rules_test_3080.jsonl");
-  const hybrid = readRun("results/runs/hybrid_test_3080.jsonl");
+  const jev = readRun("results/raw/jev_test_3080.jsonl");
+  const rules = readRun("results/raw/rules_test_3080.jsonl");
+  const hybrid = readRun("results/raw/hybrid_test_3080.jsonl");
   const point = (rs: RunRecord[]) => {
     const answered = rs.filter((r) => r.action !== null);
     return { esc: 1 - answered.length / rs.length, acc: answered.filter(isCorrect).length / answered.length };
@@ -160,7 +160,7 @@ function tradeoffChart(): string {
     max: 0.5,
     ticks: [0, 0.1, 0.2, 0.3, 0.4, 0.5],
     fmt: (v) => `${Math.round(v * 100)}%`,
-    title: "Messages handed to a person",
+    title: "Messages referred to a person",
   };
   const y: Axis = {
     min: 0.7,
@@ -193,8 +193,8 @@ function tradeoffChart(): string {
     `<text class="label" x="${sx(h.esc) + 10}" y="${sy(h.acc) - 10}">Hybrid ${pct(h.acc)}</text>` +
     `<text class="label" x="${sx(end?.esc ?? 0) + 10}" y="${sy(end?.acc ?? 0) + 4}">JEV by threshold</text>`;
   return frame(
-    "At the same human workload, the hybrid is right far more often",
-    "Test split, 3,080 messages. JEV's curve sweeps its confidence threshold (descriptive only)",
+    "At a similar referral rate, the hybrid answered more accurately than rules",
+    "Test split, 3,080 messages. JEV's curve sweeps its threshold on the test split (exploratory)",
     x,
     y,
     body,
@@ -203,7 +203,7 @@ function tradeoffChart(): string {
 
 // 3. JEV calibration (test split)
 function calibrationChart(): string {
-  const bins = calibration(readRun("results/runs/jev_test_3080.jsonl")).bins.filter((b) => b.count >= 20);
+  const bins = calibration(readRun("results/raw/jev_test_3080.jsonl")).bins.filter((b) => b.count >= 20);
   const ticks = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
   const x: Axis = {
     min: 0.2,
@@ -240,7 +240,7 @@ function calibrationChart(): string {
       ? `<text class="label" x="${sx(top.meanConfidence) - 10}" y="${sy(top.accuracy) + 26}" text-anchor="end">${pct(top.accuracy)} right when ≥90% sure</text>`
       : "");
   return frame(
-    "JEV's confidence is meaningful but optimistic",
+    "Higher JEV confidence went with higher accuracy, but it was optimistic",
     "Banking77 test split (3,080 messages), confidence bins with at least 20 messages",
     x,
     y,
@@ -250,8 +250,8 @@ function calibrationChart(): string {
 
 // 4. Accuracy by service: rules vs JEV (test split)
 function servicesChart(): string {
-  const rules = perService(readRun("results/runs/rules_test_3080.jsonl"));
-  const jev = perService(readRun("results/runs/jev_test_3080.jsonl"));
+  const rules = perService(readRun("results/raw/rules_test_3080.jsonl"));
+  const jev = perService(readRun("results/raw/jev_test_3080.jsonl"));
   const rows = Object.keys(jev).sort((a, b) => (jev[b]?.actionAccuracy ?? 0) - (jev[a]?.actionAccuracy ?? 0));
   const h = 460;
   const top = 76;
@@ -282,7 +282,7 @@ function servicesChart(): string {
     `<circle cx="${left + 70}" cy="58" r="5" fill="var(--jev)"/><text class="sub" x="${left + 80}" y="62">JEV</text>`;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${h}" width="${W}" height="${h}" role="img" aria-label="Accuracy by service, rules vs JEV">
 ${STYLE}<rect class="bg" width="${W}" height="${h}" rx="8"/>
-<text class="title" x="24" y="26">JEV is better or equal in every service</text>
+<text class="title" x="24" y="26">JEV was more accurate than rules in every service here</text>
 <text class="sub" x="24" y="44">Exact action accuracy by microservice, Banking77 test split (3,080 messages)</text>
 ${body}<text class="axis" x="${(left + W - 60) / 2}" y="${h - 6}" text-anchor="middle">Exact action accuracy</text></svg>\n`;
 }
@@ -298,7 +298,7 @@ function speedChart(): string {
       ["LLM (gpt-6-luna)", "llm", "--llm", "below"],
     ] as const
   ).map(([label, name, color, place]) => {
-    const rs = readRun(`results/runs/${name}_test_3080.jsonl`);
+    const rs = readRun(`results/raw/${name}_test_3080.jsonl`);
     const cost = (1000 * rs.reduce((sum, r) => sum + r.costUsd, 0)) / rs.length;
     return { label, color, place, ms: p50(rs), acc: rs.filter(isCorrect).length / rs.length, cost };
   });
@@ -332,8 +332,8 @@ function speedChart(): string {
     })
     .join("");
   return frame(
-    "JEV matches the LLM's accuracy at a ninth of the latency",
-    "Banking77 test split, 3,080 messages; the same 77 descriptions for JEV and the LLM",
+    "JEV was about 9× faster; the LLM was 0.6 points more accurate",
+    "Test split, 3,080 messages. The accuracy gap is within its 95% CI (−0.4 to +1.7 points)",
     x,
     y,
     body,
