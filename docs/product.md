@@ -7,7 +7,7 @@
 
 This document defines the product that the experiment runs inside. The experiment itself (which
 dispatcher is best) is defined in [`goal.md`](goal.md). The product must be realistic enough that
-the dispatcher we replace is the same piece a real engineering team would write, and simple enough
+the dispatcher being compared is the same piece a real engineering team would write, and simple enough
 that it never distracts from that comparison.
 
 ## 2. Product summary

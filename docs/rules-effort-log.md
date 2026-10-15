@@ -64,8 +64,8 @@ action accuracy (held-out)
 | Latency p50 / p95 | 0.34 ms / 0.97 ms |
 | Cost per 1,000 decisions | $0 |
 | Lines of code | 772 |
-| Safety-critical precision (a card freeze was the right action) | 75.0% |
-| Safety-critical recall (lost/compromised cases caught) | 38.7% |
+| Safety-critical exact-intent precision | 75.0% |
+| Safety-critical exact-intent recall | 38.7% |
 
 Weakest services: Cards and Transfers (54.7% each), where customers describe the same situation
 in many ways and several actions differ only in timing ("hasn't arrived" vs "how long does it take").

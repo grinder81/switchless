@@ -53,8 +53,8 @@ reading is accuracy on what is answered automatically at a fixed human workload,
 | Handed to a person | 20.6% | – |
 
 Agreement is the strong signal: the two dispatchers fail in different ways, so when they agree they
-are rarely both wrong. Safety-critical precision rises to 86.8%: far fewer cards frozen by mistake,
-because uncertain cases go to a person instead.
+are rarely both wrong. Safety-critical exact-intent precision rises to 86.8%: fewer incorrect selections of a
+safety-critical action, because uncertain cases are referred to a person instead.
 
 ## What the hybrid costs
 
