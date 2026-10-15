@@ -112,14 +112,18 @@ Order: the product and harness need no API keys; JEV is tested early as a go/no-
       safety-critical precision 86.8% (`docs/hybrid-results.md`).
 - [x] "Did you mean…?" suggestions on escalation and `POST /action` for button clicks.
 
-### Phase 7: Final benchmark and report
-- [ ] All dispatchers run once on the full 3,080-message test split.
-- [ ] Consistency: a 200-message subset re-run 3 times for LLM and JEV; changed answers reported.
-- [ ] `results/summary.md`: action and service accuracy, p50/p95 latency, cost per 1,000, LOC,
-      abstain and fallback rates, safety-critical precision.
-- [ ] Charts: accuracy vs cost, accuracy vs latency, JEV calibration, hybrid curve, rules effort curve.
-- [ ] Each hypothesis marked confirmed / rejected / mixed, with the deciding number.
-- [ ] Total API spend recorded.
+### Phase 7: Final benchmark and report ✅ (LLM to be added)
+- [x] Rules, JEV and hybrid run once on the full 3,080-message test split from frozen code (D13).
+      The LLM is added later as a separate run.
+- [x] Consistency: a 200-message subset re-run twice for JEV (0.5–2% changed) and once with options
+      reversed (5% changed).
+- [x] `results/summary.md`: action and service accuracy, p50/p95 latency, cost per 1,000, LOC,
+      abstain rate, calibration, safety-critical precision and recall, per-service breakdowns.
+- [x] Charts (`pnpm charts`): rules effort curve vs JEV, accuracy vs human workload, JEV calibration,
+      accuracy by service. (Accuracy vs cost is left for the LLM update, when there are two paid options.)
+- [x] Hypotheses marked in `docs/final-results.md`: H1 confirmed, H3 confirmed with caveat, H4 mixed,
+      H2 pending the LLM.
+- [x] Total API spend recorded ($0.81).
 
 ### Phase 8: Day-2 change (crypto)
 - [ ] Three crypto actions as in `docs/product.md` §12, with a disclosed labelled set.

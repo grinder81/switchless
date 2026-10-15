@@ -7,11 +7,12 @@ It starts as a `switch` statement and grows into thousands of lines of rules. Th
 happens when you replace that code with a decision model, specifically [JEV](https://docs.langchain.com/oss/python/integrations/providers/typesafe) by TypeSafe AI,
 and compares it head-to-head with hand-written rules and an LLM router.
 
-> Status: **Phases 1, 2, 3, 5 and 6 done**. On the same 1,000 held-out messages, hand-written rules reach
-> 63.0% action accuracy with 772 lines ([effort log](docs/rules-effort-log.md)); JEV reaches 78.5% with
-> 47 lines, 114 ms and $0.08 per 1,000 decisions ([results](docs/jev-results.md)). A hybrid where rules
-> and JEV must agree (or JEV is ≥90% sure) answers 79% of messages at 89.8% accuracy, versus 78.8% for
-> rules at the same workload ([hybrid](docs/hybrid-results.md)). See [`docs/goal.md`](docs/goal.md).
+> Status: **final benchmark done** (LLM baseline still to come). On the Banking77 test split
+> (3,080 messages): hand-written rules 65.5% exact action with 772 lines; **JEV 80.9% with 60 lines**,
+> 111 ms and $0.08 per 1,000; a hybrid where rules and JEV must agree answers 82% of messages at
+> **90.7%** accuracy. See [final results](docs/final-results.md).
+
+![Rules effort curve vs JEV](results/charts/effort-curve.svg)
 
 ## The experiment
 

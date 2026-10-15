@@ -65,6 +65,12 @@ a human (the rules dispatcher's escalation rate). Ties go to the cheaper design 
 The chosen design and threshold are frozen in code before the held-out and test runs.
 **Result:** agreement @ 0.9 (87.7% on answered, 18.9% escalated on tuning). Rules-first was worst.
 
+## D13: The test split is run once, on frozen code
+Phase 7 runs rules, JEV and the hybrid on the full test split (3,080 messages) from commit `f90cf13`,
+with the rules stages, JEV request, model version, hybrid design and threshold all frozen. The LLM
+baseline is added to the same report later as a separate run; nothing already measured is re-tuned
+after seeing test results.
+
 ## Open
 - LLM baseline model (proposed: a fast, cheap current Claude model).
 - JEV API access: `TYPESAFE_API_KEY` must be set in the environment before the Phase 3 run.
