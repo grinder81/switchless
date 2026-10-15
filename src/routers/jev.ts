@@ -11,10 +11,15 @@ export const JEV_MODEL = "jev-1.13.0";
 /** $0.042 per million input tokens; output is free (docs.typesafe.ai/models, Oct 2026). */
 export const JEV_USD_PER_INPUT_TOKEN = 0.042 / 1_000_000;
 
-export const ACTION_QUESTION = choice(
-  "Which action should the bank take to handle this customer's message?",
-  Object.fromEntries(ACTIONS.map((a) => [a.id, a.description])),
-);
+const INSTRUCTIONS = "Which action should the bank take to handle this customer's message?";
+
+/** The Choice question. `reversed` lists the options in reverse, to test sensitivity to option order. */
+export const actionQuestion = (order: "catalogue" | "reversed" = "catalogue") => {
+  const actions = order === "reversed" ? [...ACTIONS].reverse() : ACTIONS;
+  return choice(INSTRUCTIONS, Object.fromEntries(actions.map((a) => [a.id, a.description])));
+};
+
+export const ACTION_QUESTION = actionQuestion();
 
 /** The part of the TypeSafe client this router uses, so tests can pass a fake. */
 export interface SystemOneClient {
@@ -32,13 +37,20 @@ export interface SystemOneClient {
 export class JEVRouter implements Router {
   readonly name = "jev";
 
-  constructor(private readonly client: SystemOneClient = defaultClient()) {}
+  private readonly question: typeof ACTION_QUESTION;
+
+  constructor(
+    private readonly client: SystemOneClient = defaultClient(),
+    order: "catalogue" | "reversed" = "catalogue",
+  ) {
+    this.question = actionQuestion(order);
+  }
 
   async route(text: string): Promise<Decision> {
     const start = performance.now();
     const res = await this.client.systemOne({
       state: { customer_message: text },
-      questions: { action: ACTION_QUESTION },
+      questions: { action: this.question },
       model: JEV_MODEL,
     });
     const { choice: action, confidence, probabilities } = res.answers.action;

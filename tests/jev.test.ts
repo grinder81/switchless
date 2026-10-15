@@ -47,6 +47,13 @@ describe("JEV dispatcher", () => {
     expect(d.alternatives?.map((a) => a.action)).toEqual(["atm.wrong_amount", "fx.rates", "atm.pending"]);
   });
 
+  it("can reverse the option order for the order-sensitivity check", async () => {
+    const { client, requests } = fake("fx.rates");
+    await new JEVRouter(client, "reversed").route("rates?");
+    const ids = Object.keys(requests[0]?.questions.action.criteria ?? {});
+    expect(ids).toEqual(ACTIONS.map((a) => a.id).reverse());
+  });
+
   it("treats a missing token count as zero cost", async () => {
     const { client } = fake("fx.rates", 0.5, null);
     expect((await new JEVRouter(client).route("rates?")).costUsd).toBe(0);
