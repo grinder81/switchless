@@ -71,13 +71,14 @@ Order: the product and harness need no API keys; JEV is tested early as a go/no-
 - [x] `POST /help` gateway with an injected dispatcher; abstain escalates to a human.
 - [x] End to end with an oracle dispatcher on 500 real Banking77 messages.
 
-### Phase 2: Measurement harness
-- [ ] Fixed, seeded stratified train samples (300 and 1,000 messages), stored as message indices.
-- [ ] Runner records action, confidence, latency and cost per decision; resumable after interruption.
-- [ ] Metrics: action and service accuracy, abstain rate, p50/p95 latency, cost per 1,000, calibration,
-      per-service confusion, precision on safety-critical actions.
-- [ ] `scripts/count-loc.ts` counts logical lines of code (no blanks or comments) per dispatcher.
-- [ ] Report generator produces `results/summary.md` from runs; verified with oracle and random dispatchers.
+### Phase 2: Measurement harness ✅
+- [x] Fixed, seeded stratified train samples (300 and 1,000 messages), identified by row index.
+- [x] Runner records action, confidence, latency and cost per decision; resumable; errors recorded, never dropped.
+- [x] Metrics: action and service accuracy, abstain and error rates, p50/p95 latency, cost per 1,000,
+      calibration (ECE), per-service accuracy and confusion, safety-critical precision and recall.
+- [x] `scripts/count-loc.ts` counts logical lines of code (no blanks or comments) per dispatcher.
+- [x] `pnpm report` renders a Markdown report from runs; verified with oracle (100%) and random (≈1/77).
+- [x] The test split refuses to run without `--final`.
 
 ### Phase 3: JEV dispatcher (go/no-go gate)
 - [ ] Uses the catalogue's service and action descriptions only.
