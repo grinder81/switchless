@@ -7,9 +7,9 @@ It starts as a `switch` statement and grows into thousands of lines of rules. Th
 happens when you replace that code with a decision model, specifically [JEV](https://docs.langchain.com/oss/python/integrations/providers/typesafe) by TypeSafe AI,
 and compares it head-to-head with hand-written rules and an LLM router.
 
-> Status: **Phases 1, 2 and 5 done**. Kestrel Bank runs end to end on a hand-written rules dispatcher
-> (63.0% action accuracy, 772 lines, 20% escalated; see the [effort log](docs/rules-effort-log.md)).
-> JEV and LLM dispatchers come next. See [`docs/goal.md`](docs/goal.md).
+> Status: **Phases 1, 2, 3 and 5 done**. On the same 1,000 held-out messages, hand-written rules reach
+> 63.0% action accuracy with 772 lines ([effort log](docs/rules-effort-log.md)); JEV reaches 78.5% with
+> 47 lines, 114 ms and $0.08 per 1,000 decisions ([results](docs/jev-results.md)). LLM baseline next. See [`docs/goal.md`](docs/goal.md).
 
 ## The experiment
 
@@ -63,7 +63,8 @@ pnpm loc                              # lines of code per dispatcher
 pnpm rules:curve                      # rules accuracy vs lines of code, stage by stage
 ```
 
-Requires Node 22+ and pnpm.
+Requires Node 22+ and pnpm. The `jev` dispatcher needs `TYPESAFE_API_KEY`; behind an HTTP proxy,
+also set `NODE_USE_ENV_PROXY=1` so Node's `fetch` uses it.
 
 ## Prior work
 
