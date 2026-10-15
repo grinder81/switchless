@@ -11,13 +11,25 @@ Glean already compared JEV against a locally fine-tuned classifier (74.5% vs 66.
 classification) and concluded JEV is most attractive when a task is new or its labels change. We cite
 that result instead of reproducing it, and focus on routing, where Glean found JEV strongest.
 
-## D3: Python
-Ecosystem for data handling, LLM SDKs and the JEV/LangChain integration.
+## D3: TypeScript (replaced Python)
+TypeSafe and Anthropic both ship official TypeScript SDKs. One language covers the fake bank, the
+dispatchers, the benchmark and the Router Arena web page, and typed action schemas are central to the
+project. Charts are produced in TypeScript; result files stay plain JSON so other tools can read them.
 
 ## D4: Thresholds tuned on train, reported on test
 Prevents the hybrid from looking better than it is.
 
+## D5: Product is Kestrel Bank, 11 services, 77 actions
+Defined in `docs/product.md`; the catalogue in `src/catalog/` is the single source of truth and
+`docs/action-catalog.md` is generated from it.
+
+## D6: Dispatchers choose the action, not just the service
+A real product must know which handler to run. Accuracy is reported at both levels.
+
+## D7: Showcase is repo + report + Router Arena page, not a banking UI
+The Arena runs in replay mode publicly (precomputed decisions, no API cost or abuse) and live mode
+locally with the user's own keys.
+
 ## Open
 - LLM baseline model (proposed: a fast, cheap current Claude model).
 - JEV API access.
-- Final intent → service map.

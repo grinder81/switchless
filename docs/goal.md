@@ -25,14 +25,14 @@ Any of these may turn out false. Results are published either way.
 
 | In scope | Out of scope |
 |---|---|
-| Banking77, 77 intents → ~12 fictional microservices | Real microservice backends (handlers are stubs) |
+| Kestrel Bank: 77 actions (Banking77 intents) across 11 microservices | Real microservice backends (handlers are stubs) |
 | Routers: rules, LLM, JEV, hybrid | Fine-tuned baseline (cited from Glean instead) |
 | Banking77 test split (3,080 messages) | Trading domain (planned as part 2) |
 | Accuracy, latency, cost, LOC, calibration | Production deployment, UI |
 
 ## Metrics
 
-1. **Accuracy**: correct microservice (business metric) and correct intent out of 77 (harder metric).
+1. **Accuracy**: correct action out of 77 (strict) and correct microservice (lenient).
 2. **Latency**: p50 and p95 per decision.
 3. **Cost** per 1,000 decisions.
 4. **Lines of code** per router (logical lines, excluding shared harness).
@@ -50,7 +50,7 @@ Any of these may turn out false. Results are published either way.
 - **The test split is touched once.** Rules, prompts, option descriptions and thresholds are developed
   on the train split only. All four routers run on test in Phase 6, once, with everything frozen.
 - **Same information for every router.** LLM and JEV see the identical service names and descriptions
-  from `config/service_map.yaml`.
+  from `src/catalog/`.
 - **An invalid or missing answer counts as wrong**, except an explicit abstain, which is reported
   separately.
 - **Every number in the report is reproducible** from a committed command and pinned model versions.
@@ -60,18 +60,18 @@ Any of these may turn out false. Results are published either way.
 ### Phase 0: Foundation ✅
 - Repo, docs, router contract, harness skeleton, dataset download, CI green.
 
-### Phase 1: Service map
-- [ ] All 77 intents assigned to exactly one service (enforced by a test).
-- [ ] Every service owns at least 2 intents; every service has a one-line description.
-- [ ] `docs/service_map.md` explains the grouping and lists the deliberately hard boundaries
-      (e.g. `card_arrival` vs `card_delivery_estimate` within a service is fine; pairs that straddle
-      two services are listed explicitly).
-- [ ] Train-split class balance per service reported.
+### Phase 1: Product (Kestrel Bank)
+- [x] All 77 intents assigned to exactly one action and service (enforced by a test).
+- [x] Every service owns at least 2 actions; every service and action has a one-line description.
+- [x] `docs/product.md` explains the grouping and lists the deliberately hard boundaries.
+- [ ] Fake bank data store seeded with demo customers and their stories.
+- [ ] All 77 handlers implemented and tested against the seed data.
+- [x] Train-split class balance per service reported (`docs/action-catalog.md`).
 
 ### Phase 2: Rules router
 - [ ] Written using the train split only; development time is time-boxed and recorded.
 - [ ] Returns `service=None` (abstain) when no rule matches, instead of guessing.
-- [ ] `scripts/count_loc.py` reports logical lines of code (no blanks, comments or docstrings) per router.
+- [ ] `scripts/count-loc.ts` reports logical lines of code (no blanks, comments or docstrings) per router.
 - [ ] Train-split service accuracy and abstain rate reported.
 
 ### Phase 3: LLM router
@@ -103,6 +103,10 @@ Any of these may turn out false. Results are published either way.
       hybrid accuracy-vs-fallback curve.
 - [ ] Each hypothesis marked confirmed / rejected / mixed, with the number that decides it.
 - [ ] Total API spend for the project recorded.
+
+### Phase 6b: Day-2 change (crypto)
+- [ ] Three crypto actions added as defined in `docs/product.md` §12, with a disclosed labelled set.
+- [ ] Lines changed and accuracy (new actions and regressions on the original 77) reported per router.
 
 ### Phase 7: Go public
 - [ ] README rewritten around the results; quick start verified from a fresh clone.

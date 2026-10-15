@@ -14,22 +14,23 @@
 
 ## Router contract
 
-Every router implements one method (see `src/switchless/routers/base.py`):
+Every router implements one method (see `src/routers/types.ts`):
 
-```python
-def route(self, text: str) -> Decision
+```ts
+route(text: string): Promise<Decision>
 ```
 
 `Decision` carries:
 
 | Field | Meaning |
 |---|---|
-| `service` | chosen microservice, or `None` if the router abstains |
-| `intent` | chosen Banking77 intent, if the router predicts at that level |
-| `confidence` | 0–1; rules report 1.0 on a match, LLM reports its stated or derived confidence |
-| `latency_ms` | wall-clock time of the decision |
-| `cost_usd` | API cost of the decision (0 for rules) |
+| `action` | chosen action id (one of 77, e.g. `cards.track_delivery`), or `null` to abstain |
+| `confidence` | 0–1; rules report 1 on a match, LLM and JEV report their own confidence |
+| `latencyMs` | wall-clock time of the decision |
+| `costUsd` | API cost of the decision (0 for rules) |
 | `router` | which router (or hybrid stage) made the final call |
+
+Accuracy is scored at two levels: the exact action (strict) and the owning service (lenient).
 
 Keeping the contract identical across routers is what makes the comparison fair: the benchmark runner
 never knows which router it is driving.
@@ -50,8 +51,8 @@ text ──► rules ──match──► done
 
 ## Data flow
 
-1. `scripts/download_banking77.py` fetches the CSVs into `data/` (git-ignored).
-2. `config/service_map.yaml` maps each of the 77 intents to one service.
-3. `bench/runner.py` streams test messages through a router and writes one JSONL line per decision to
+1. `scripts/download-banking77.ts` fetches the CSVs into `data/` (git-ignored).
+2. `src/catalog/` defines the 11 services and 77 actions; each action maps to one Banking77 intent.
+3. `src/bench/runner.ts` streams messages through a router and writes one JSON line per decision to
    `results/runs/`.
-4. `bench/metrics.py` turns a run into a summary table committed under `results/`.
+4. `src/bench/metrics.ts` turns a run into summary metrics committed under `results/`.
