@@ -484,3 +484,12 @@ export const ACTIONS: readonly Action[] = [
 
 export const ACTION_BY_INTENT: ReadonlyMap<string, Action> = new Map(ACTIONS.map((x) => [x.intent, x]));
 export const ACTION_BY_ID: ReadonlyMap<string, Action> = new Map(ACTIONS.map((x) => [x.id, x]));
+
+/** Actions that freeze a card or sign out devices first: a wrong dispatch into these is costly. */
+export const SAFETY_CRITICAL: ReadonlySet<string> = new Set([
+  "security.report_lost_card",
+  "security.compromised_card",
+  "security.report_lost_phone",
+  "card_payments.unrecognised",
+  "atm.unrecognised",
+]);

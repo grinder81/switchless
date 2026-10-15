@@ -57,8 +57,8 @@ text ──► rules ──match──► done
 | `src/bank/` | fake bank: types, policy, seed data, in-memory store |
 | `src/services/` | the 77 handlers, one file per service, plus the action registry |
 | `src/gateway/app.ts` | `POST /help`: dispatcher → handler, or escalate on abstain |
-| `src/routers/` | dispatchers (`oracle` is for tests only) |
-| `src/bench/` | runner and metrics |
+| `src/routers/` | dispatchers and the registry; `oracle` and `random` are reference points, never benchmarked as results |
+| `src/bench/` | stratified sampling, resumable runner, metrics, Markdown report |
 
 ## Data flow
 

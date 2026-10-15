@@ -8,12 +8,14 @@ import {
   serviceAccuracy,
 } from "../src/bench/metrics.js";
 
-const rec = (goldIntent: string, action: string | null, latencyMs = 1, costUsd = 0.001): RunRecord => ({
+const rec = (goldIntent: string, action: string | null, wallMs = 1, costUsd = 0.001): RunRecord => ({
+  index: 0,
   text: "",
   goldIntent,
   action,
   confidence: 1,
-  latencyMs,
+  latencyMs: 0,
+  wallMs,
   costUsd,
   router: "t",
 });

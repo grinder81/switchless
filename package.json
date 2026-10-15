@@ -17,7 +17,10 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
     "format": "biome format --write .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "bench": "tsx scripts/bench.ts",
+    "report": "tsx scripts/report.ts",
+    "loc": "tsx scripts/count-loc.ts"
   },
   "dependencies": {
     "@hono/node-server": "2.1.5",
