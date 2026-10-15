@@ -11,7 +11,13 @@ const fake = (choice: string, confidence = 0.93, inputTokens: number | null = 20
       requests.push(req);
       return {
         model: JEV_MODEL,
-        answers: { action: { choice, confidence } },
+        answers: {
+          action: {
+            choice,
+            confidence,
+            probabilities: { [choice]: confidence, "fx.rates": 0.04, "atm.pending": 0.01 },
+          },
+        },
         usage: { input_tokens: inputTokens },
       };
     },
@@ -38,6 +44,7 @@ describe("JEV dispatcher", () => {
     expect(d.confidence).toBe(0.81);
     expect(d.costUsd).toBeCloseTo(0.084);
     expect(d.router).toBe("jev");
+    expect(d.alternatives?.map((a) => a.action)).toEqual(["atm.wrong_amount", "fx.rates", "atm.pending"]);
   });
 
   it("treats a missing token count as zero cost", async () => {

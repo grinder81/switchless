@@ -21,7 +21,8 @@
     "bench": "tsx scripts/bench.ts",
     "report": "tsx scripts/report.ts",
     "loc": "tsx scripts/count-loc.ts",
-    "rules:curve": "tsx scripts/rules-curve.ts"
+    "rules:curve": "tsx scripts/rules-curve.ts",
+    "hybrid:tune": "tsx scripts/hybrid-tune.ts"
   },
   "dependencies": {
     "@hono/node-server": "2.1.5",

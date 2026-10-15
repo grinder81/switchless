@@ -56,6 +56,15 @@ first option of a Choice, so option order is fixed (catalogue order) and identic
 and Phase 7 adds an order-shuffle consistency check. A flat 77-way choice is tried first because it is
 the zero-code baseline; a two-level variant (service, then action) is the fallback if it underperforms.
 
+## D12: How the hybrid is chosen (written before tuning)
+Candidates: rules-first, JEV-first, agreement (rules and JEV agree → answer; otherwise JEV if
+confident) and JEV-only, each over confidence thresholds 0.5–0.99. They are compared on a **tuning
+sample**: 1,000 train messages (stratified, seed 7) disjoint from the held-out sample used for all
+earlier numbers. Winner: highest accuracy on automatically answered messages with at most 20% sent to
+a human (the rules dispatcher's escalation rate). Ties go to the cheaper design (fewer JEV calls).
+The chosen design and threshold are frozen in code before the held-out and test runs.
+**Result:** agreement @ 0.9 (87.7% on answered, 18.9% escalated on tuning). Rules-first was worst.
+
 ## Open
 - LLM baseline model (proposed: a fast, cheap current Claude model).
 - JEV API access: `TYPESAFE_API_KEY` must be set in the environment before the Phase 3 run.

@@ -38,16 +38,14 @@ never knows which router it is driving.
 ## Hybrid
 
 ```
-text ──► rules ──match──► done
-           │ no match
-           ▼
-          JEV ──confidence ≥ τ──► done
-           │ below τ
-           ▼
-          LLM (or "escalate to human")
+text ──► rules ─┐
+                 ├─ same action ──────────────► done (agreement)
+text ──► JEV ────┘
+                 └─ different ─► JEV confidence ≥ 0.9 ──► done (JEV)
+                                 └─ below ─► human, with "Did you mean…?" buttons
 ```
 
-`τ` (the confidence threshold) is tuned on the **train** split, never on test.
+The design and threshold were chosen on a separate train tuning sample (decision D12), never on test.
 
 ## Code map
 

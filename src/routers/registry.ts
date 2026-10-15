@@ -1,4 +1,5 @@
 import type { Example } from "../data/banking77.js";
+import { HybridRouter } from "./hybrid.js";
 import { JEVRouter } from "./jev.js";
 import { OracleRouter } from "./oracle.js";
 import { RandomRouter } from "./random.js";
@@ -11,7 +12,6 @@ export type RouterName = (typeof ROUTERS)[number];
 
 const PLANNED: Partial<Record<RouterName, string>> = {
   llm: "Phase 4",
-  hybrid: "Phase 6",
 };
 
 export function createRouter(name: string, labelled: Example[]): Router {
@@ -24,6 +24,8 @@ export function createRouter(name: string, labelled: Example[]): Router {
       return new RulesRouter();
     case "jev":
       return new JEVRouter();
+    case "hybrid":
+      return new HybridRouter(new RulesRouter(), new JEVRouter());
     default: {
       const phase = PLANNED[name as RouterName];
       throw new Error(
