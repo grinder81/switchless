@@ -58,6 +58,7 @@ text ──► rules ──match──► done
 | `src/services/` | the 77 handlers, one file per service, plus the action registry |
 | `src/gateway/app.ts` | `POST /help`: dispatcher → handler, or escalate on abstain |
 | `src/routers/` | dispatchers and the registry; `oracle` and `random` are reference points, never benchmarked as results |
+| `src/routers/rules.ts`, `src/routers/rules/` | the hand-written dispatcher: a small engine plus 8 append-only rule stages |
 | `src/bench/` | stratified sampling, resumable runner, metrics, Markdown report |
 
 ## Data flow

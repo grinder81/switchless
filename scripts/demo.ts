@@ -1,26 +1,25 @@
-/** Walk through each persona's story: `pnpm demo`. Messages are real Banking77 train examples. */
+/**
+ * Walk through each persona's story with the hand-written rules dispatcher: `pnpm demo`.
+ * Messages are written fresh for the demo, not taken from Banking77.
+ */
 import { createBank } from "../src/bank/bank.js";
-import { loadSplit } from "../src/data/banking77.js";
 import { createApp } from "../src/gateway/app.js";
-import { OracleRouter } from "../src/routers/oracle.js";
-
-const train = loadSplit("train");
-const example = (intent: string) => train.find((e) => e.intent === intent)?.text ?? "";
+import { RulesRouter } from "../src/routers/rules.js";
 
 const steps = [
-  ["maya", example("card_arrival")],
-  ["maya", example("card_delivery_estimate")],
-  ["tom", example("card_payment_wrong_exchange_rate")],
-  ["tom", example("wrong_amount_of_cash_received")],
-  ["tom", example("cancel_transfer")],
-  ["priya", example("unable_to_verify_identity")],
-  ["priya", example("pending_top_up")],
-  ["sam", example("card_payment_not_recognised")],
-  ["sam", example("transaction_charged_twice")],
+  ["maya", "My new card still hasn't arrived, where is it?"],
+  ["maya", "How long does card delivery take?"],
+  ["tom", "The exchange rate on my payment in Spain looks wrong"],
+  ["tom", "The ATM only gave me half the cash I asked for"],
+  ["tom", "Please cancel the transfer I just sent to the wrong account"],
+  ["priya", "Why can't I verify my identity?"],
+  ["priya", "My top up is still pending after an hour"],
+  ["sam", "I don't recognise a payment on my card"],
+  ["sam", "I was charged twice for the same thing"],
   ["sam", "Can you book me a table for dinner?"],
 ] as const;
 
-const app = createApp(createBank(), new OracleRouter(train));
+const app = createApp(createBank(), new RulesRouter());
 for (const [customerId, message] of steps) {
   const res = await app.request("/help", {
     method: "POST",

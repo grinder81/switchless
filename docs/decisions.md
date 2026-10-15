@@ -41,6 +41,12 @@ is backed up to a single `wip` branch on GitHub (overwritten, deleted after each
 notes and development runs stay in git-ignored `.local/` and `results/runs/`. Commits are authored by
 the project owner and co-authored by Claude.
 
+## D10: Rules are measured on a held-out part of train
+Rules were written while reading 9,003 dev messages; every reported number comes from the 1,000-message
+stratified sample (seed 42) that was never inspected. Stage files are append-only once measured so
+each point of the effort curve is reproducible; fixes are added as later, more specific rules. Rule
+writing stopped after stage 8 (−0.1 points on dev); the final dispatcher uses all eight stages.
+
 ## Open
 - LLM baseline model (proposed: a fast, cheap current Claude model).
 - JEV API access.
