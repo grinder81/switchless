@@ -56,7 +56,7 @@ Payments made with a card: pending, declined, reverted or unrecognised payments,
 | Action | Banking77 intent | What the customer wants | Handler | Example message |
 |---|---|---|---|---|
 | `card_payments.explain_fee` | `card_payment_fee_charged` | A fee was charged on a card payment | Find the fee and explain why it applied | "There was a fee charged when I paid with my card." |
-| `card_payments.unrecognised` | `card_payment_not_recognised` | The customer does not recognise a card payment | List recent card payments and offer to freeze the card | "There's a payment with my card that I didn't perform. I don't know that name shown." |
+| `card_payments.unrecognised` | `card_payment_not_recognised` | The customer does not recognise a card payment | Freeze the card, then list recent card payments | "There's a payment with my card that I didn't perform. I don't know that name shown." |
 | `card_payments.fx_rate_query` | `card_payment_wrong_exchange_rate` | A card payment abroad used the wrong exchange rate | Show the rate applied vs the market rate at the time | "Last Saturday, I was charged extra for the exchange rate on my payment. Is something wrong?" |
 | `card_payments.declined` | `declined_card_payment` | A card payment was declined | Find the decline and its reason | "I'm not sure why my card didn't work" |
 | `card_payments.pending` | `pending_card_payment` | A card payment is still pending | Show pending card payments and expected settlement | "What does it mean when a payment is pending?" |
@@ -72,7 +72,7 @@ Cash withdrawals at ATMs: fees, declines, pending or unrecognised withdrawals, w
 |---|---|---|---|---|
 | `atm.atm_usage` | `atm_support` | Which ATMs accept the card and how to use them | Explain ATM support | "I can use this card at which ATMs?" |
 | `atm.explain_fee` | `cash_withdrawal_charge` | A fee was charged on a cash withdrawal | Find the withdrawal fee and explain it | "Why is there a charge when I took out money?" |
-| `atm.unrecognised` | `cash_withdrawal_not_recognised` | The customer does not recognise a cash withdrawal | List recent withdrawals and offer to freeze the card | "I looked on the app and it says I withdrew cash. I didn't!" |
+| `atm.unrecognised` | `cash_withdrawal_not_recognised` | The customer does not recognise a cash withdrawal | Freeze the card, then list recent withdrawals | "I looked on the app and it says I withdrew cash. I didn't!" |
 | `atm.declined` | `declined_cash_withdrawal` | A cash withdrawal was declined | Find the declined withdrawal and its reason | "I tried to withdraw cash and got declined, why is that?" |
 | `atm.pending` | `pending_cash_withdrawal` | A cash withdrawal is still pending | Show pending withdrawals | "I would like to know why a withdraw I made for some cash shows up as pending." |
 | `atm.wrong_amount` | `wrong_amount_of_cash_received` | The ATM gave the wrong amount of cash | Open an ATM discrepancy claim | "Why did I only receive a partial amount of what I tried to withdraw?" |

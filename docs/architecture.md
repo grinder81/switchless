@@ -49,6 +49,17 @@ text ──► rules ──match──► done
 
 `τ` (the confidence threshold) is tuned on the **train** split, never on test.
 
+## Code map
+
+| Path | Role |
+|---|---|
+| `src/catalog/` | 11 services, 77 actions: the single source of truth |
+| `src/bank/` | fake bank: types, policy, seed data, in-memory store |
+| `src/services/` | the 77 handlers, one file per service, plus the action registry |
+| `src/gateway/app.ts` | `POST /help`: dispatcher → handler, or escalate on abstain |
+| `src/routers/` | dispatchers (`oracle` is for tests only) |
+| `src/bench/` | runner and metrics |
+
 ## Data flow
 
 1. `scripts/download-banking77.ts` fetches the CSVs into `data/` (git-ignored).
