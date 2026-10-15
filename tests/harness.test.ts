@@ -134,7 +134,7 @@ describe("reference dispatchers", () => {
   });
 
   it("names the phase for dispatchers not built yet", () => {
-    expect(() => createRouter("jev", toy)).toThrow("Phase 3");
+    expect(() => createRouter("llm", toy)).toThrow("Phase 4");
     expect(() => createRouter("nope", toy)).toThrow("unknown dispatcher");
   });
 });

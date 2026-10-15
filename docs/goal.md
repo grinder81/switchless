@@ -80,11 +80,12 @@ Order: the product and harness need no API keys; JEV is tested early as a go/no-
 - [x] `pnpm report` renders a Markdown report from runs; verified with oracle (100%) and random (≈1/77).
 - [x] The test split refuses to run without `--final`.
 
-### Phase 3: JEV dispatcher (go/no-go gate)
-- [ ] Uses the catalogue's service and action descriptions only.
-- [ ] Returns the chosen action and its probability as `confidence`; cost and latency recorded.
-- [ ] Run on the 300-message train sample.
-- [ ] **Gate:** results reviewed together before continuing.
+### Phase 3: JEV dispatcher (go/no-go gate) ✅
+- [x] Uses the catalogue's service and action descriptions only (`src/routers/jev.ts`, decision D11).
+- [x] Returns the chosen action and its probability as `confidence`; cost and latency recorded.
+- [x] Run on the held-out 1,000-message train sample (same as the rules): 78.5% action accuracy,
+      89.2% service accuracy, 114 ms p50, $0.083 per 1,000 (`docs/jev-results.md`).
+- [x] **Gate:** recommendation GO; awaiting the project author's review.
 
 ### Phase 4: LLM dispatcher
 - [ ] Model and version pinned; temperature 0; structured output.
